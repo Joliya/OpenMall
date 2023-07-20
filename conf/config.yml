@@ -5,11 +5,9 @@ app:
 
 
 mysql:
-  conn: root:123456@tcp(127.0.0.1:3306)/mall?charset=utf8mb4&parseTime=true&loc=Local
+  conn: root:qwersdf123ki@tcp(120.53.20.7:3306)/mall?charset=utf8mb4&parseTime=true&loc=Local
 
 
 redis:
-  host: 127.0.0.1
-  port: 6379
-  password: 123456
+  host: 127.0.0.1:6379
   db: 0
