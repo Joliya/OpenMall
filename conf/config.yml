@@ -1,0 +1,15 @@
+app:
+  name: open_mall
+  port: 8080
+  mode: release
+
+
+mysql:
+  conn: root:123456@tcp(127.0.0.1:3306)/open_mall?charset=utf8mb4&parseTime=true&loc=Local
+
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: 123456
+  db: 0
