@@ -5,6 +5,7 @@ import (
 	"OpenMall/conf"
 	"OpenMall/db"
 	"OpenMall/routers"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,4 +16,10 @@ func InitConfig(server *gin.Engine) {
 	cache.InitRedis(initConfig)
 	// 绑定路由
 	routers.InitRouter(server)
+}
+
+func DeferClose() {
+	// 关闭
+	fmt.Println("关闭连接")
+	db.CloseDb()
 }
