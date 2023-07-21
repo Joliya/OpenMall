@@ -3,31 +3,35 @@ package db
 import (
 	"OpenMall/conf"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"time"
 )
 
 var DB *gorm.DB
 
-func InitDB(conf *conf.Config) {
-	db, err := gorm.Open("mysql", conf.SqlConn)
-	db.LogMode(true)
-	// Error
+func InitDB(conf *conf.Config) *gorm.DB {
+	DB, err := gorm.Open(mysql.Open(conf.SqlConn))
 	if err != nil {
+		fmt.Println("数据连接失败1！！！")
 		fmt.Println(err)
+		return nil
 	}
-	if gin.Mode() == "release" {
-		db.LogMode(false)
-	}
-	//默认不加复数
-	db.SingularTable(true)
-	//设置连接池
-	////空闲
-	//db.DB().SetMaxIdleConns(20)
-	////打开
-	//db.DB().SetMaxOpenConns(100)
-	////超时
-	//db.DB().SetConnMaxLifetime(time.Second * 30)
 
-	DB = db
+	sqlDB, err := DB.DB()
+	if err != nil {
+		return nil
+	}
+
+	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
+	sqlDB.SetMaxIdleConns(10)
+
+	// SetMaxOpenConns 设置打开数据库连接的最大数量。
+	sqlDB.SetMaxOpenConns(100)
+
+	// SetConnMaxLifetime 设置了连接可复用的最大时间。
+	sqlDB.SetConnMaxLifetime(time.Hour)
+
+	return DB
+
 }
