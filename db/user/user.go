@@ -1,8 +1,10 @@
 package user
 
+import "OpenMall/db"
+
 type User struct {
-	Id       int    `json:"id"`
-	Username string `json:"username"`
+	db.Model
+	Username string `json:"username" gorm:"index"`
 	Password string `json:"password"`
 	Active   bool   `json:"active"`
 }

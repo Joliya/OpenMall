@@ -1,19 +1,13 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gin-gonic/gin"
 
 func main() {
-	router := gin.Default()
-	router.GET("/", func(context *gin.Context) {
-		context.String(200, "欢迎来到 OpenMall")
-	})
-
+	r := gin.Default()
 	// 初始化数据库连接和路由
-	InitConfig(router)
+	InitConfig(r)
 
-	err := router.Run()
+	err := r.Run()
 	if err != nil {
 		return
 	}
