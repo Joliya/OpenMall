@@ -38,5 +38,14 @@ func InitDB(conf *conf.Config) *gorm.DB {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	DB = conn
-	return conn
+	return DB
+}
+
+// CloseDb 关闭连接
+func CloseDb() {
+	sqlDB, err := DB.DB()
+	if err != nil {
+		return
+	}
+	sqlDB.Close()
 }
