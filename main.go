@@ -13,6 +13,8 @@ func main() {
 	// 初始化数据库连接和路由
 	InitConfig(router)
 
+	defer DeferClose()
+
 	err := router.Run()
 	if err != nil {
 		return

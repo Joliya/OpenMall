@@ -2,6 +2,7 @@ package db
 
 import (
 	"OpenMall/conf"
+	"OpenMall/db/user"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -32,6 +33,23 @@ func InitDB(conf *conf.Config) *gorm.DB {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
+	// Migrate
+	InitMigrate(DB)
+
 	return DB
 
+}
+
+// CloseDb 关闭连接
+func CloseDb() {
+	sqlDB, err := DB.DB()
+	if err != nil {
+		return
+	}
+	sqlDB.Close()
+}
+
+func InitMigrate(db *gorm.DB) {
+	// 迁移user表
+	db.AutoMigrate(&user.User{})
 }
