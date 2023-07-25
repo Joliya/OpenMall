@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"OpenMall/util/string_util"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -35,7 +36,7 @@ func GenJwt(claims MyCustomClaims) (string, error) {
 	// 使用HS256加密方式
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signToken, err := token.SignedString(mySigningKey)
-	if err != nil {
+	if !string_util.IsNil(err) {
 		return "", err
 	}
 	return signToken, nil
@@ -55,7 +56,7 @@ func JWTAuthMiddleware(c *gin.Context) {
 	}
 	// 校验token
 	myclaims, err := AuthJwt(signToken)
-	if err != nil {
+	if !string_util.IsNil(err) {
 		fmt.Println(err)
 		c.JSON(http.StatusOK, gin.H{
 			"code": 1003,
