@@ -5,7 +5,9 @@ app:
 
 
 mysql:
-  conn: root:qwersdf123ki@tcp(120.53.20.7:3306)/mall?charset=utf8mb4&parseTime=true&loc=Local
+  dsn: root:qwer1234@tcp(127.0.0.1:3306)/mall?charset=utf8mb4&parseTime=true&loc=Local
+  maxidleconns: 10
+  maxopenconns: 100
 
 
 redis:

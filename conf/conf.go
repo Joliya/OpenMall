@@ -7,7 +7,7 @@ import (
 
 type Config struct {
 	AppConf   *AppConfig
-	SqlConn   string
+	SqlConn   *DBConfig
 	RedisConf *RedisConfig
 	//....
 }
@@ -16,6 +16,12 @@ type AppConfig struct {
 	Name string
 	Port string
 	Mode string
+}
+
+type DBConfig struct {
+	Dsn          string
+	Maxidleconns int
+	Maxopenconns int
 }
 
 type RedisConfig struct {
@@ -44,7 +50,11 @@ func InitConfig() *Config {
 			Port: viper.GetString("app.port"),
 			Mode: viper.GetString("app.mode"),
 		},
-		SqlConn: viper.GetString("mysql.conn"),
+		SqlConn: &DBConfig{
+			Dsn:          viper.GetString("mysql.dsn"),
+			Maxidleconns: viper.GetInt("maxidleconns"),
+			Maxopenconns: viper.GetInt("maxopenconns"),
+		},
 		RedisConf: &RedisConfig{
 			Host:     viper.GetString("redis.host"),
 			Port:     viper.GetString("redis.port"),

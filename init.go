@@ -12,7 +12,9 @@ import (
 func InitConfig(server *gin.Engine) {
 	// 初始化各种配置
 	initConfig := conf.InitConfig()
-	db.InitDB(initConfig)
+	conn := db.InitDB(initConfig)
+	InitMySqlTables(conn)
+	//defer DeferClose()
 	cache.InitRedis(initConfig)
 	// 绑定路由
 	routers.InitRouter(server)
