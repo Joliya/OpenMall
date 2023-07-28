@@ -10,6 +10,10 @@ func IsEmpty(str string) bool {
 	return str == ""
 }
 
-func IsNil(param interface{}) bool {
-	return param == nil
+func IsNil(str interface{}) bool {
+	return str == nil
+}
+
+func IsNotNil(str interface{}) bool {
+	return !IsNil(str)
 }

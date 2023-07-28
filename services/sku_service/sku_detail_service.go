@@ -1,28 +1,42 @@
 package sku_service
 
 import (
-	"OpenMall/db/sku"
+	"OpenMall/db/dao"
+	"OpenMall/util/number"
 	"OpenMall/util/string_util"
 	"encoding/json"
+	"gorm.io/gorm"
+	"time"
 )
 
-type specification struct {
-	Id   uint   `json:"id"`
-	Name string `json:"name"`
-	Desc string `json:"desc"`
+type spu struct {
+	ID        uint
+	Name      string
+	Alias     string
+	Title     string
+	Type      uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }
 
-type GoodsDetail struct {
-	Id             uint            `json:"id"`
-	Name           string          `json:"name"`
-	Alias          string          `json:"alias"`
-	Type           uint            `json:"type"`
-	BasePriceFen   int             `json:"basePrice"`
-	PriceFen       int             `json:"price"`
-	HeadImage      string          `json:"headImage"`
-	CarouselImages []string        `json:"carouselImages"`
-	Specification  []specification `json:"specification"`
-	Stock          int             `json:"stock"`
+type goodsDetail struct {
+	ID                uint
+	SpuID             int
+	Name              string
+	Alias             string
+	Title             string
+	Type              uint
+	SpecificationName string
+	Desc              string
+	BasePrice         string
+	Price             string
+	HeadImage         string
+	CarouselImages    []string
+	Stock             int
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
 }
 
 // GetSkuDetail
@@ -30,48 +44,31 @@ type GoodsDetail struct {
 // @param skuId 商品id
 // @return nil or GoodsDetail
 func GetSkuDetail(skuId int) any {
-	detail, err := sku.GetSkuDetail(skuId)
-	if !string_util.IsNil(err) {
+	skuDao := dao.NewSkuDao()
+	detail, err := skuDao.GetSkuDetail(skuId)
+	if string_util.IsNotNil(err) {
 		return nil
 	}
-
-	return GoodsDetail{
-		Id:             detail.ID,
-		Name:           detail.Name,
-		Alias:          detail.Alias,
-		Type:           detail.Type,
-		BasePriceFen:   detail.BasePriceFen,
-		PriceFen:       detail.PriceFen,
-		HeadImage:      detail.HeadImage,
-		CarouselImages: getCarouselImages(detail.CarouselImages),
-		Specification:  getSpecifications(detail.Specification),
-		Stock:          detail.Stock,
+	spuDao := dao.NewSpuDao()
+	spu, err := spuDao.GetSpuById(detail.SpuID)
+	return goodsDetail{
+		ID:                detail.ID,
+		SpuID:             detail.SpuID,
+		Name:              spu.Name,
+		Alias:             spu.Alias,
+		Title:             spu.Title,
+		Type:              spu.Type,
+		SpecificationName: detail.Name,
+		Desc:              detail.Desc,
+		BasePrice:         number.GetYuanFromFen(detail.BasePriceFen),
+		Price:             number.GetYuanFromFen(detail.PriceFen),
+		HeadImage:         detail.HeadImage,
+		CarouselImages:    getCarouselImages(detail.CarouselImages),
+		Stock:             detail.Stock,
+		CreatedAt:         detail.CreatedAt.Format(time.DateTime),
+		UpdatedAt:         detail.UpdatedAt.Format(time.DateTime),
+		DeletedAt:         detail.DeletedAt.Time.Format(time.DateTime),
 	}
-}
-
-// getSpecifications
-// @Description: 获取商品所有规格信息
-// @param specificationStr  商品图片列表字符串，是个json字符串
-// @return []specification  规格详情列表
-func getSpecifications(specificationStr string) []specification {
-	var spes []specification
-	if string_util.IsEmpty(specificationStr) {
-		var speIds []int
-		err := json.Unmarshal([]byte(specificationStr), &speIds)
-		if !string_util.IsNil(err) {
-			return nil
-		}
-		var speList []sku.Specification
-		speList = sku.GetSpecificationList(speIds)
-		for _, spe := range speList {
-			spes = append(spes, specification{
-				Id:   spe.ID,
-				Name: spe.Name,
-				Desc: spe.Desc,
-			})
-		}
-	}
-	return spes
 }
 
 // getCarouselImages
@@ -82,7 +79,7 @@ func getCarouselImages(carouseImagesStr string) []string {
 	var carouselImages []string
 	if string_util.IsEmpty(carouseImagesStr) {
 		err := json.Unmarshal([]byte(carouseImagesStr), &carouselImages)
-		if !string_util.IsNil(err) {
+		if string_util.IsNotNil(err) {
 			carouselImages = []string{}
 		}
 	}

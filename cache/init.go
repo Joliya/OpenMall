@@ -18,7 +18,7 @@ func InitRedis(conf *conf.Config) {
 
 	_, err := client.Ping().Result()
 
-	if !string_util.IsNil(err) {
+	if string_util.IsNotNil(err) {
 		fmt.Println(err)
 	}
 
