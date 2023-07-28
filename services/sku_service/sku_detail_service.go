@@ -2,6 +2,7 @@ package sku_service
 
 import (
 	"OpenMall/db/sku"
+	"OpenMall/util/string_util"
 	"encoding/json"
 )
 
@@ -30,7 +31,7 @@ type GoodsDetail struct {
 // @return nil or GoodsDetail
 func GetSkuDetail(skuId int) any {
 	detail, err := sku.GetSkuDetail(skuId)
-	if err != nil {
+	if !string_util.IsNil(err) {
 		return nil
 	}
 
@@ -54,10 +55,10 @@ func GetSkuDetail(skuId int) any {
 // @return []specification  规格详情列表
 func getSpecifications(specificationStr string) []specification {
 	var spes []specification
-	if specificationStr != "" {
+	if string_util.IsEmpty(specificationStr) {
 		var speIds []int
 		err := json.Unmarshal([]byte(specificationStr), &speIds)
-		if err != nil {
+		if !string_util.IsNil(err) {
 			return nil
 		}
 		var speList []sku.Specification
@@ -79,9 +80,9 @@ func getSpecifications(specificationStr string) []specification {
 // @return []string
 func getCarouselImages(carouseImagesStr string) []string {
 	var carouselImages []string
-	if carouseImagesStr != "" {
+	if string_util.IsEmpty(carouseImagesStr) {
 		err := json.Unmarshal([]byte(carouseImagesStr), &carouselImages)
-		if err != nil {
+		if !string_util.IsNil(err) {
 			carouselImages = []string{}
 		}
 	}

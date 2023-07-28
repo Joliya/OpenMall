@@ -2,6 +2,7 @@ package cache
 
 import (
 	"OpenMall/conf"
+	"OpenMall/util/string_util"
 	"fmt"
 	"github.com/go-redis/redis"
 )
@@ -17,7 +18,7 @@ func InitRedis(conf *conf.Config) {
 
 	_, err := client.Ping().Result()
 
-	if err != nil {
+	if !string_util.IsNil(err) {
 		fmt.Println(err)
 	}
 

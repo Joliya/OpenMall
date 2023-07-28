@@ -2,6 +2,7 @@ package db
 
 import (
 	"OpenMall/conf"
+	"OpenMall/util/string_util"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -18,14 +19,14 @@ func InitDB(conf *conf.Config) *gorm.DB {
 			SingularTable: true,
 		},
 	})
-	if err != nil {
+	if !string_util.IsNil(err) {
 		fmt.Println("数据连接失败1！！！")
 		fmt.Println(err)
 		return nil
 	}
 
 	sqlDB, err := conn.DB()
-	if err != nil {
+	if !string_util.IsNil(err) {
 		return nil
 	}
 
@@ -44,7 +45,7 @@ func InitDB(conf *conf.Config) *gorm.DB {
 // CloseDb 关闭连接
 func CloseDb() {
 	sqlDB, err := DB.DB()
-	if err != nil {
+	if !string_util.IsNil(err) {
 		return
 	}
 	sqlDB.Close()
