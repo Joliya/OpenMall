@@ -10,7 +10,7 @@ func main() {
 	// 初始化数据库连接和路由
 	InitConfig(r)
 	err := r.Run()
-	if !string_util.IsNil(err) {
+	if string_util.IsNotNil(err) {
 		return
 	}
 }

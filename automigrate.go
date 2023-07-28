@@ -1,8 +1,7 @@
 package main
 
 import (
-	"OpenMall/db/sku"
-	"OpenMall/db/user"
+	"OpenMall/db/model"
 	"OpenMall/util/string_util"
 	"fmt"
 	"gorm.io/gorm"
@@ -10,11 +9,11 @@ import (
 
 func InitMySqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
-		sku.Sku{},
-		sku.Specification{},
-		user.User{},
+		model.Sku{},
+		model.Spu{},
+		model.User{},
 	)
-	if !string_util.IsNil(err) {
+	if string_util.IsNotNil(err) {
 		fmt.Printf("AutoMigrate 失败：%s\n", err)
 	}
 }

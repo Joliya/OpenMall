@@ -1,4 +1,4 @@
-package db
+package dao
 
 import (
 	"OpenMall/conf"
@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var DB *gorm.DB
+var _db *gorm.DB
 
 func InitDB(conf *conf.Config) *gorm.DB {
 	conn, err := gorm.Open(mysql.Open(conf.SqlConn.Dsn), &gorm.Config{
@@ -19,14 +19,14 @@ func InitDB(conf *conf.Config) *gorm.DB {
 			SingularTable: true,
 		},
 	})
-	if !string_util.IsNil(err) {
+	if string_util.IsNotNil(err) {
 		fmt.Println("数据连接失败1！！！")
 		fmt.Println(err)
 		return nil
 	}
 
 	sqlDB, err := conn.DB()
-	if !string_util.IsNil(err) {
+	if string_util.IsNotNil(err) {
 		return nil
 	}
 
@@ -38,15 +38,20 @@ func InitDB(conf *conf.Config) *gorm.DB {
 
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
-	DB = conn
-	return DB
+	_db = conn
+	return _db
 }
 
 // CloseDb 关闭连接
 func CloseDb() {
-	sqlDB, err := DB.DB()
-	if !string_util.IsNil(err) {
+	sqlDB, err := _db.DB()
+	if string_util.IsNotNil(err) {
 		return
 	}
 	sqlDB.Close()
+}
+
+func NewDBClient() *gorm.DB {
+	db := _db
+	return db
 }

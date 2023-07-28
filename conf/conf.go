@@ -36,7 +36,7 @@ func InitConfig() *Config {
 	viper.SetConfigType("yaml")   //设置配置文件格式
 	viper.AddConfigPath("conf")   //设置配置文件的路径
 	viper.SetConfigName("config") //设置配置文件名
-	if err := viper.ReadInConfig(); !string_util.IsNil(err) {
+	if err := viper.ReadInConfig(); string_util.IsNotNil(err) {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			fmt.Println("找不到配置文件..")
 		} else {
