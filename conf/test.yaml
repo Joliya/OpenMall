@@ -1,0 +1,33 @@
+app:
+  name: mall
+  addr: 8080
+
+mysql:
+  DSN: admin:123456@tcp(localhost:3306)/mall?timeout=2s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4
+  SlowThreshold: 0               # 慢SQL阈值，单位秒
+  ShowLog: false                   # 是否打印SQL日志
+  MaxIdleConn: 10                 # 最大闲置的连接数，0意味着使用默认的大小2， 小于0表示不使用连接池
+  MaxOpenConn: 60                 # 最大打开的连接数, 需要小于数据库配置中的max_connections数
+  ConnMaxLifeTime: 4000           # 单个连接最大存活时间，建议设置比数据库超时时长(wait_timeout)稍小一些
+
+redis:
+  Addr: localhost:6379
+  Password: 7tOw51ZFCLaY7T0M
+  DB: 0
+  MinIdleConn: 200
+  DialTimeout: 60
+  ReadTimeout: 15
+  WriteTimeout: 15
+  PoolSize: 100
+  PoolTimeout: 240
+  IsTrace: true
+
+machinery:
+  DefaultQueue: default_task_queue
+  ResultsExpireIn: 3600
+  NormalTasksPollPeriod: 1000
+  DelayedTasksPollPeriod: 50
+  BrokerAddr: 123456@localhost:6379
+  BackendAddr: 123456@localhost:6379
+  BrokerSelectDb: 10
+  BackendSelectDB: 11
