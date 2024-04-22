@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type spu struct {
+type Spu struct {
 	ID        uint
 	Name      string
 	Alias     string
@@ -20,7 +20,7 @@ type spu struct {
 	DeletedAt gorm.DeletedAt
 }
 
-type goodsDetail struct {
+type GoodsDetail struct {
 	ID                uint
 	SpuID             int
 	Name              string
@@ -44,14 +44,14 @@ type goodsDetail struct {
 // @param skuId 商品id
 // @return nil or GoodsDetail
 func GetSkuDetail(skuId int) any {
-	skuDao := dao.NewSkuDao()
+	skuDao := dao.SkuDao{}
 	detail, err := skuDao.GetSkuDetail(skuId)
 	if string_util.IsNotNil(err) {
 		return nil
 	}
-	spuDao := dao.NewSpuDao()
+	spuDao := dao.SpuDao{}
 	spu, err := spuDao.GetSpuById(detail.SpuID)
-	return goodsDetail{
+	return GoodsDetail{
 		ID:                detail.ID,
 		SpuID:             detail.SpuID,
 		Name:              spu.Name,
