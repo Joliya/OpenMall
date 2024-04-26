@@ -8,6 +8,22 @@ import (
 )
 import "OpenMall/services/sku_service"
 
+type SkuDto struct {
+	SkuId             int
+	SpuId             int
+	Name              string
+	Alias             string
+	Title             string
+	Type              int
+	SpecificationName string
+	Desc              string
+	BasePrice         string
+	Price             string
+	HeadImage         string
+	CarouselImages    []string
+	Stock             int
+}
+
 func GetSkuDetailView(c *gin.Context) {
 	skuId, exist := c.GetQuery("skuId")
 	if !exist {
@@ -23,4 +39,15 @@ func GetSkuDetailView(c *gin.Context) {
 	} else {
 		http_tools.JsonHttpSuccess(c, detail)
 	}
+}
+
+func CreateSkuView(c *gin.Context) {
+	// 将 c 中的数据解析为 SkuDto
+	sku := SkuDto{}
+	err := c.BindJSON(&sku)
+	if err != nil {
+		http_tools.JsonHttpError(c, "参数错误", nil)
+	}
+	// 调用 sku_service.CreateSku
+	// 返回结果
 }
